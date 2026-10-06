@@ -5,10 +5,12 @@
   In production: login, roles, and a manager-only permission on approve, reject, list and summary.
 - **Employees can only submit.** Without auth I can't identify "their" expenses, so the employee tab doesn't list others' data.
 - **Status:** `pending` on creation. Employees cannot set it. Only the manager endpoints change it.
-- **Decisions are final.** Only `pending` expenses can be approved or rejected. Anything else returns 400.
+- **Decisions are final.** Only `pending` expenses can be approved or rejected. Deciding an already-decided expense returns 400, and an unknown id returns 404.
 - **Amount** must be greater than 0. Currency isn't specified, so amounts are plain numbers with two decimals.
 - **Date** cannot be in the future.
 - **The total** counts approved expenses only.
+- **Employee name is free text.** There are no user accounts, so the name is typed in on the form.
+- **Expenses can't be edited or deleted after submission.** The brief only covers submit, approve and reject.
 
 ## Backend decisions
 - Approve and reject are separate POST actions, so the submit endpoint can never set a status.
@@ -17,7 +19,6 @@
   Allowed values are enforced by the serializer, not a DB constraint.
 - The viewset uses create/list/retrieve mixins only, so there are no update or delete routes to secure.
 - `DecimalField` for money (serialized as a string). The total is computed in the database with `Sum`.
-- The list is not paginated, since the volume is small. At scale: cursor pagination.
 - SQLite for simplicity. PostgreSQL in production.
 - CORS allows only the Vite dev origin.
 
@@ -28,6 +29,12 @@
 - The screen is refetched from the server after every submit and every decision (including failed ones).
 - Tailwind CSS v4 via its Vite plugin.
 
-## Not done / next steps
-- Authentication and permissions, pagination, a frontend test suite, and Docker/deployment config.
-- AI assistance was used for scaffolding and review. I understand and can explain every part (see commit history).
+## Scope and future improvements
+Kept out of scope to match the brief:
+- **Authentication and roles:** see the first assumption above.
+- **Pagination:** the expected data volume is small. Next step: cursor pagination.
+- **Frontend tests:** the business rules are covered by backend API tests. Next step: component tests.
+- **Deployment config:** the app runs locally per the README. Next step: Docker and a production database.
+
+## How this was built
+An AI coding assistant was used (the brief allows it) for scaffolding and for step-by-step guidance. I reviewed the code, wrote the assumptions and decisions above, and tested the behavior with the included tests and manual checks.
