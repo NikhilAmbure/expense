@@ -1,6 +1,8 @@
-  backend/venv/
-  __pycache__/
-  db.sqlite3
-  node_modules/
-  dist/
-  .env
+backend/venv/
+__pycache__/
+db.sqlite3
+node_modules/
+dist/
+.env
+.idea/
+.vscode/
