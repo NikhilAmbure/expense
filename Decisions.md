@@ -11,3 +11,7 @@
 4) The list isn't paginated, since the volume is small. At scale I'd add cursor pagination.
 5) The total is computed in the database, and amounts are Decimal, serialized as strings.
 6) No authentication, since the brief doesn't ask for it. Anyone can call the manager endpoints, and in production I'd add auth and a manager-only permission.
+
+### No state management library
+**Decision:** State is held with `useState` and `useEffect`.
+**Why:** Three screens and one list of server data don't justify Redux. If the app grows, I'd add TanStack Query (built for server state: caching and refetching) rather than Redux.
